@@ -1,5 +1,5 @@
 CREATE DATABASE IF NOT EXISTS MED_REMINDER;
-USE med_reminder;
+USE MED_REMINDER;
 
 CREATE TABLE IF NOT EXISTS USERS
 (user_id int unsigned not null auto_increment, name varchar(100) not null, fprint int, allergies tinyint not null, PRIMARY KEY (user_id));
