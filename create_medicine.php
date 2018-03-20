@@ -31,7 +31,7 @@ if (isset($_POST['user_id']) && isset($_POST['name']) && isset($_POST['medFreqPe
 	// But first lets just make it work, then use prepared stmts
 	
 	//insert row, not safe
-	$result = mysql_query("INSERT INTO Medicines(user_id, name, medFreqPerTime, medFreqInterval, dosage, unit, expiration, taken) VALUES('$user_id', '$name', '$medFreqPerTime', '$medFreqInterval', '$dosage', '$unit', '$expiration', '$dosesLeft', '$taken')");
+	$result = mysql_query("INSERT INTO Medicines(user_id, med_name, medFreqPerTime, medFreqInterval, dosage, unit, expiration, dosesLeft, taken) VALUES('$user_id', '$name', '$medFreqPerTime', '$medFreqInterval', '$dosage', '$unit', '$expiration', '$dosesLeft', '$taken')");
 
 	//TODO: Drill into timecheck array and add to timecheck table.
 
