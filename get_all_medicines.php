@@ -11,17 +11,19 @@ $db = new DB_CONNECT();
 if (isset($_GET["uid"])) {
 	$uid = $_GET['uid'];
 
-	$result = mysql_query("SELECT * FROM MEDICINES WHERE user_id = $uid");
+	$con = $db->showconn();
 
-	if (mysql_num_rows($result) > 0) {
+	$result = mysqli_query($con, "SELECT * FROM MEDICINES WHERE user_id = $uid");
+
+	if (mysqli_num_rows($result) > 0) {
 
 	$response["medicines"] = array();
 
-	while($row = mysql_fetch_array($result)) {
+	while($row = mysqli_fetch_array($result)) {
 
 		$medicine = array();
 		$medicine["uid"] = $row["user_id"];
-		$medicine["name"] = $row["name"];
+		$medicine["name"] = $row["med_name"];
 		$medicine["medFreqPerTime"] = $row["medFreqPerTime"];
 		$medicine["medFreqInterval"] = $row["medFreqInterval"];
 		$medicine["dosage"] = $row["dosage"];
@@ -31,17 +33,18 @@ if (isset($_GET["uid"])) {
 		$medicine["taken"] = $row["taken"];
 
 		array_push($response["medicines"], $medicine);
-}
+	}
 
 $response["success"] = 1;
 
 echo json_encode($response);
 
-} else {
+	} else {
 
-	$response["success"] = 0;
-	$response["message"] = "No medicine found for this user";
+		$response["success"] = 0;
+		$response["message"] = "No medicine found for this user";
 
-	echo json_encode($response);
+		echo json_encode($response);
+	}
 }
 ?>
