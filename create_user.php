@@ -10,8 +10,8 @@ $response = array();
 //check fields
 if (isset($_POST['name']) && isset($_POST['allergies'])){
 
-	$name = $POST['name'];
-	$allergies = $POST['allergies'];
+	$name = $_POST['name'];
+	$allergies = $_POST['allergies'];
 
 	require_once __DIR__ . '/db_connect.php';
 
@@ -23,8 +23,9 @@ if (isset($_POST['name']) && isset($_POST['allergies'])){
 	//$stmt->execute(array('name' => $name));
 	// But first lets just make it work, then use prepared stmts
 	
+	$con = $db->showconn();
 	//insert row, not safe
-	$result = mysql_query("INSERT INTO Users(name, allergies) VALUES('$name', '$allergies')");
+	$result = mysqli_query($con, "INSERT INTO Users(name, allergies) VALUES('$name', '$allergies')");
 
 	//check if success
 	if ($result) {
@@ -39,7 +40,7 @@ if (isset($_POST['name']) && isset($_POST['allergies'])){
 	$response["message"] = "Error: User not created";
 
 	echo json_encode($response);
-} else {
+} } else {
 	//required field is missing
 	$response["success"] = 0;
 	$response["message"] = "A required field is missing.";
