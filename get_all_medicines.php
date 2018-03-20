@@ -11,7 +11,7 @@ $db = new DB_CONNECT();
 if (isset($_GET["uid"])) {
 	$uid = $_GET['uid'];
 
-	$result = mysql_query("SELECT * FROM Medicine WHERE user_id = $uid");
+	$result = mysql_query("SELECT * FROM MEDICINES WHERE user_id = $uid");
 
 	if (mysql_num_rows($result) > 0) {
 
