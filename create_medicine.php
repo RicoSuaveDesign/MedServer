@@ -33,7 +33,7 @@ if (isset($_POST['user_id']) && isset($_POST['name']) && isset($_POST['medFreqPe
 		$con = $db->showconn();
 		
 		//insert row, not safe
-		$result = mysqli_query($con, "INSERT INTO Medicines(user_id, med_name, medFreqPerTime, medFreqInterval, dosage, unit, expiration, dosesLeft, taken) VALUES('$user_id', '$name', '$medFreqPerTime', '$medFreqInterval', '$dosage', '$unit', '$expiration', '$dosesLeft', '$taken')");
+		$result = mysqli_query($con, "INSERT INTO MEDICINES(user_id, med_name, medFreqPerTime, medFreqInterval, dosage, unit, expiration, dosesLeft, taken) VALUES('$user_id', '$name', '$medFreqPerTime', '$medFreqInterval', '$dosage', '$unit', '$expiration', '$dosesLeft', '$taken')");
 
 		//TODO: Drill into timecheck array and add to timecheck table.
 
