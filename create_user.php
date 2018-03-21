@@ -25,7 +25,7 @@ if (isset($_POST['name']) && isset($_POST['allergies'])){
 	
 	$con = $db->showconn();
 	//insert row, not safe
-	$result = mysqli_query($con, "INSERT INTO Users(name, allergies) VALUES('$name', '$allergies')");
+	$result = mysqli_query($con, "INSERT INTO USERS(name, allergies) VALUES('$name', '$allergies')");
 
 	//check if success
 	if ($result) {
