@@ -14,11 +14,11 @@ if (isset($_POST['user_id']) && isset($_POST['name']) && isset($_POST['medFreqPe
 		$dosage = $_POST['dosage'];
 		$unit= $_POST['unit'];
 		$expiration = $_POST['expiration'];
-		$dosesLeft = $_POST['$dosesLeft'];
+		$dosesLeft = $_POST['dosesLeft'];
 		$taken = 0;
 
 		// this should be an array, which will later be iterated over
-		$times = $_POST['$checkTimes'];
+		$times = $_POST['checkTimes'];
 
 		require_once __DIR__ . '/db_connect.php';
 
