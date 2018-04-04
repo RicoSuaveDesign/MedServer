@@ -24,6 +24,7 @@ if (isset($_GET["uid"])) {
 		$medicine = array();
 		$medicine["uid"] = $row["user_id"];
 		$medicine["name"] = $row["med_name"];
+		$medicine["med_desc"] = $row["med_desc"];
 		$medicine["medFreqPerTime"] = $row["medFreqPerTime"];
 		$medicine["medFreqInterval"] = $row["medFreqInterval"];
 		$medicine["dosage"] = $row["dosage"];
@@ -31,6 +32,11 @@ if (isset($_GET["uid"])) {
 		$medicine["expiration"] = $row["expiration"];
 		$medicine["dosesLeft"] = $row["dosesLeft"];
 		$medicine["taken"] = $row["taken"];
+		$medicine["reminded"] = $row["reminded"];
+		$medicine["new"] = $row["new"];
+		$medicine["stolen"] = $row["stolen"];
+		$medicine["inout"] = $row["inout"];
+		$medicine["lastout"] = $row["lastout"];
 
 		array_push($response["medicines"], $medicine);
 	}
