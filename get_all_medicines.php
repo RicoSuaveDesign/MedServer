@@ -23,6 +23,7 @@ if (isset($_GET["uid"])) {
 
 		$medicine = array();
 		$medicine["uid"] = $row["user_id"];
+		$medicine["tag_id"] = $row["tag_id"];
 		$medicine["name"] = $row["med_name"];
 		$medicine["med_desc"] = $row["med_desc"];
 		$medicine["medFreqPerTime"] = $row["medFreqPerTime"];
