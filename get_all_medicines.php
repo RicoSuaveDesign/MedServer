@@ -34,7 +34,7 @@ if (isset($_GET["uid"])) {
 		$medicine["dosesLeft"] = $row["dosesLeft"];
 		$medicine["taken"] = $row["taken"];
 		$medicine["reminded"] = $row["reminded"];
-		$medicine["new"] = $row["newmed"];
+		$medicine["newmed"] = $row["newmed"];
 		$medicine["stolen"] = $row["stolen"];
 		$medicine["inout"] = $row["inOrOut"];
 		$medicine["lastout"] = $row["lastout"];
