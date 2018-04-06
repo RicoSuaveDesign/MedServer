@@ -19,6 +19,7 @@ if (isset($obj->{'mid'})){
 		$con = $db->showconn();
 		
 		//delete row, not safe
+		$timeres = $result = mysqli_query($con, "DELETE FROM CHECKTIMES WHERE med_id = '$mid'");
 		$result = mysqli_query($con, "DELETE FROM MEDICINES WHERE med_id = '$mid'");
 		
 		//check if success
