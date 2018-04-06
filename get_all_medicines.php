@@ -32,12 +32,45 @@ if (isset($_GET["uid"])) {
 		$medicine["unit"] = $row["unit"];
 		$medicine["expiration"] = $row["expiration"];
 		$medicine["dosesLeft"] = $row["dosesLeft"];
-		$medicine["taken"] = $row["taken"];
+		//$medicine["taken"] = $row["taken"];
 		$medicine["reminded"] = $row["reminded"];
-		$medicine["newmed"] = $row["newmed"];
-		$medicine["stolen"] = $row["stolen"];
-		$medicine["inout"] = $row["inOrOut"];
+		//$medicine["newmed"] = $row["newmed"];
+		//$medicine["stolen"] = $row["stolen"];
+		//$medicine["inout"] = $row["inOrOut"];
 		$medicine["lastout"] = $row["lastout"];
+
+		// For whatever reason, retrofit isn't serializing tinyints as booleans so here we are
+		// Using wall of if/else to force it to get trues/falses.
+
+		if($row["newmed"] == 1) {
+			$medicine["newmed"] = "true";
+		}
+		else {
+			$medicine["newmed"] = "false";
+		}
+
+		if($row["stolen"] == 1) {
+			$medicine["stolen"] = "true";
+		}
+		else {
+			$medicine["stolen"] = "false";
+		}
+
+		if($row["inOrOut"] == 1) {
+			$medicine["inOrOut"] = "true";
+		}
+		else {
+			$medicine["inOrOut"] = "false";
+		}
+
+		if($row["taken"] == 1) {
+			$medicine["taken"] = "true";
+		}
+		else {
+			$medicine["taken"] = "false";
+		}
+
+		
 
 		array_push($response["medicines"], $medicine);
 	}
