@@ -6,8 +6,8 @@
 $response = array();
 
 // dump post results to see if werking
-$file = 'postdump.txt';
-$current = file_get_contents($file);
+//$file = 'postdump.txt';
+//$current = file_get_contents($file);
 
 $data = file_get_contents("php://input");
 $obj = json_decode($data);
@@ -40,44 +40,31 @@ foreach ($obj->{'checkTime'} as $value) {
 //check fields
 if (isset($obj->{'uid'}) && isset($obj->{'name'}) && isset($obj->{'medFreqPerTime'}) && isset($obj->{'medFreqInterval'}) && isset($obj->{'dosage'}) && isset($obj->{'unit'}) && isset($obj->{'expiration'}) && isset($obj->{'dosesLeft'})){
 
+		$tag_id = $obj->{'tag_id'};
 		$user_id = $obj->{'uid'};
-		$current .= $user_id;
-		$current .= "\r\n";
 		
 		$name = $obj->{'name'};
-		$current .= $name;
-		$current .= "\r\n";
+	
+		$med_desc = $obj->{'med_desc'};
 		
 		$medFreqPerTime = $obj->{'medFreqPerTime'};
-		$current .= $medFreqPerTime;
-		$current .= "\r\n";
 
 		$medFreqInterval = $obj->{'medFreqInterval'};
-		$current .= $medFreqInterval;
-		$current .= "\r\n";
 
 		$dosage = $obj->{'dosage'} ;
-		$current .= $dosage;
-		$current .= "\r\n";
 
 		$unit= $obj->{'unit'};
-		$current .= $unit;
-		$current .= "\r\n";
 
 		//$expiration = $obj->{'expiration'};
 		$expiration = "2018-03-31";
-		$current .= $expiration;
-		$current .= "\r\n";
 
 		$dosesLeft = $obj->{'dosesLeft'};
-		$current .= $dosesLeft;
-		$current .= "\r\n";
 
 		$taken = 0;
-
-		// this should be an array, which will later be iterated over
-		//$times = (array) $_POST['$checkTime[]'];
-		//$current .= $times[0] + "\n";
+		$inOrOut = 1;
+		$stolen = 0;
+		$reminded = 0;
+		$taken = 0;
 
 
 		require_once __DIR__ . '/db_connect.php';
@@ -93,7 +80,7 @@ if (isset($obj->{'uid'}) && isset($obj->{'name'}) && isset($obj->{'medFreqPerTim
 		$con = $db->showconn();
 		
 		//insert row, not safe
-		$result = mysqli_query($con, "INSERT INTO MEDICINES(user_id, med_name, medFreqPerTime, medFreqInterval, dosage, unit, expiration, dosesLeft, taken) VALUES('$user_id', '$name', '$medFreqPerTime', '$medFreqInterval', '$dosage', '$unit', '$expiration', '$dosesLeft', '$taken')");
+		$result = mysqli_query($con, "UPDATE MEDICINES SET med_name = '$name', med_desc = '$med_desc', medFreqPerTime = '$medFreqPerTime', medFreqInterval = '$medFreqInterval', dosage = '$dosage', unit = '$unit', expiration = '$expiration', dosesLeft = '$dosesLeft', taken = 0, reminded = 0, newmed = 0, stolen = 0, inOrOut = 1, user_id = 'uid'  WHERE tag_id = '$tag_id'");
 
 		//TODO: Drill into timecheck array and add to timecheck table.
 		foreach ($obj->{'checkTime'} as $value) {
@@ -101,14 +88,7 @@ if (isset($obj->{'uid'}) && isset($obj->{'name'}) && isset($obj->{'medFreqPerTim
 			// VERY TEMPORARY to put checktimes all on a single medicine. 
 			// Medicines will actually be an update to a medicine with how the sys will work.
 			$value += "0";
-			$timeRes = mysqli_query($con, "INSERT INTO CHECKTIMES(checkTime, tag_id) VALUES($value, 1)");
-			if ($timeRes){
-			$current .= "time added";
-			$current .= "\r\n";}
-			else {
-				$current .= "time not added";
-				$current .= "\r\n";
-			}
+			$timeRes = mysqli_query($con, "INSERT INTO CHECKTIMES(checkTime, tag_id) VALUES('$value', '$tag_id')");
 
 
 		}
@@ -118,10 +98,10 @@ if (isset($obj->{'uid'}) && isset($obj->{'name'}) && isset($obj->{'medFreqPerTim
 		$response["success"] = 1;
 		$response["message"] = "Medicine created.";
 
-		$current .= "Medicine created";
+		
 
 
-		file_put_contents($file, $current);
+		
 
 		//echo response
 		echo json_encode($response);
@@ -130,8 +110,7 @@ if (isset($obj->{'uid'}) && isset($obj->{'name'}) && isset($obj->{'medFreqPerTim
 		$response["success"] = 0;
 		$response["message"] = "Error: Medicine not created";
 
-		$current .= "Medicine not created";
-		file_put_contents($file, $current);
+		
 
 		echo json_encode($response);
 	}
@@ -139,9 +118,7 @@ if (isset($obj->{'uid'}) && isset($obj->{'name'}) && isset($obj->{'medFreqPerTim
 	$response["success"] = 0;
 	$response["message"] = "Error: A field is missing";
 
-	$current .= "Error: A field is missing";
-
-	file_put_contents($file, $current);
+	
 
 	echo json_encode($response);
 }
