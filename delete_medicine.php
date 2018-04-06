@@ -7,9 +7,10 @@ $response = array();
 
 
 //check fields
-if (if (isset($_POST['mid'])){
+if (isset($_POST['mid'])){
 		
 		$mid = $_POST['mid'];
+		//$response["sent_id"] = $mid;
 		
 		require_once __DIR__ . '/db_connect.php';
 		//connect to database
@@ -18,8 +19,8 @@ if (if (isset($_POST['mid'])){
 		$con = $db->showconn();
 		
 		//delete row, not safe
-		$timeres = $result = mysqli_query($con, "DELETE FROM CHECKTIMES WHERE med_id = '$mid'");
-		$result = mysqli_query($con, "DELETE FROM MEDICINES WHERE med_id = '$mid'");
+		$timeres = mysqli_query($con, "DELETE FROM CHECKTIMES WHERE tag_id = '$mid'");
+		$result = mysqli_query($con, "DELETE FROM MEDICINES WHERE tag_id = '$mid'");
 		
 		//check if success
 		if ($result) {
