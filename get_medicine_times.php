@@ -1,6 +1,6 @@
 <?php
 
-// Gets the details on one medicine.
+// Gets all check times for one medicine, based on the id
 
 $response = array();
 
@@ -13,7 +13,7 @@ if (isset($_GET["mid"])) {
 
 	$con = $db->showconn();
 
-	$result = mysqli_query($con, "SELECT * FROM MEDICINES WHERE tag_id = $mid");
+	$result = mysqli_query($con, "SELECT * FROM CHECKTIMES WHERE tag_id = $mid");
 
 	if(!empty($result)) {
 
@@ -22,20 +22,15 @@ if (isset($_GET["mid"])) {
 				$result = mysqli_fetch_array($result);
 
 				$med = array();
-				$med["mid"] = $result["tag_id"];
-				$med["name"] = $result["med_name"];
-				$med["medFreqPerTime"] = $result["medFreqPerTime"];
-				$med["medFreqInterval"] = $result["medFreqInterval"];
-				$med["dosage"] = $result["dosage"];
-				$med["unit"] = $result["unit"];
-				$med["taken"] = $result["taken"];
+				$med["timeid"] = $result["time_id"];
+				$med["thetime"] = $result["checkTime"];
+				$med["thedate"] = $result["checkDate"];
 
-				// ADD CHECK TIME CODE HERE WHEN IS INSERTABLE
 
 				$response["success"] = 1;
 
 				$response["medicine"] = array();
-				array_push($response["medicine"], $med);
+				array_push($response["times"], $med);
 
 				echo json_encode($response);
 		} else {
