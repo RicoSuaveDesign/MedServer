@@ -3,14 +3,13 @@
 // JSON array
 $response = array();
 
-$data = file_get_contents("php://input");
-$obj = json_decode($data);
-// dump post results to see if werking
+
+
 
 //check fields
-if (isset($obj->{'mid'})){
+if (if (isset($_POST['mid'])){
 		
-		$name = $obj->{'mid'};
+		$mid = $_POST['mid'];
 		
 		require_once __DIR__ . '/db_connect.php';
 		//connect to database
