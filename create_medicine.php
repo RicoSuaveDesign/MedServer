@@ -60,11 +60,6 @@ if (isset($obj->{'uid'}) && isset($obj->{'name'}) && isset($obj->{'medFreqPerTim
 
 		$dosesLeft = $obj->{'dosesLeft'};
 
-		$taken = 0;
-		$inOrOut = 1;
-		$stolen = 0;
-		$reminded = 0;
-		$taken = 0;
 
 
 		require_once __DIR__ . '/db_connect.php';
@@ -80,7 +75,7 @@ if (isset($obj->{'uid'}) && isset($obj->{'name'}) && isset($obj->{'medFreqPerTim
 		$con = $db->showconn();
 		
 		//insert row, not safe
-		$result = mysqli_query($con, "UPDATE MEDICINES SET med_name = '$name', med_desc = '$med_desc', medFreqPerTime = '$medFreqPerTime', medFreqInterval = '$medFreqInterval', dosage = '$dosage', unit = '$unit', expiration = '$expiration', dosesLeft = '$dosesLeft', taken = 0, reminded = 0, newmed = 0, stolen = 0, inOrOut = 1, user_id = 'uid'  WHERE tag_id = '$tag_id'");
+		$result = mysqli_query($con, "UPDATE MEDICINES SET med_name = '$name', med_desc = '$med_desc', medFreqPerTime = '$medFreqPerTime', medFreqInterval = '$medFreqInterval', dosage = '$dosage', unit = '$unit', expiration = '$expiration', dosesLeft = '$dosesLeft', taken = 0, reminded = 0, newmed = 0, stolen = 0, inOrOut = 1, user_id = '$user_id'  WHERE tag_id = '$tag_id'");
 
 		//TODO: Drill into timecheck array and add to timecheck table.
 		foreach ($obj->{'checkTime'} as $value) {
