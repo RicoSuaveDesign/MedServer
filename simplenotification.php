@@ -1,28 +1,56 @@
 <?php
 
-require_once __DIR__ . '/db_config.php';
+require_once __DIR__ . '/db_connect.php';
 #API access key from Google API's Console
 
-# TODO: query db for the user reg id
 
-    $registrationIds = 'eZU7koTSVCE:APA91bHu2TdU0UzdmsyP65rY1RC-bx_EPJs8syAg-qNwb8KkSOUvLEXavd-oP-Bz3LfKky2tY2IgfIv0clURJp9QJejM0Wv_owIHPZu6kE76yjSmQEEf9_ZtBOVshwITTRF4iF_3rzNS';
 
-$body = '';
-$body .= 'hey look ';
-$body .= 'ur too st00pid';
+    $db = new DB_CONNECT();
+    $con = $db->showconn();
+    $result = mysqli_query($con, "SELECT token FROM USERS WHERE user_id = 1");
+
+if (mysqli_num_rows($result) > 0) {
+
+	while($row = mysqli_fetch_array($result)) {
+	
+
+  
+    
+    $registrationIds = $row["token"];
+    //echo $registrationIds;
+
+
+$body = 'Take';
+if($argc > 1)
+{
+	
+     for($i = 1; $i<$argc; $i++){
+        $body .= " ";
+        $body .= $argv[$i];
+
+     }
+}
+else
+{
+     $body .= " a medicine";
+}
+
+
+
 
 #prep the bundle
      $msg = array
           (
 		'body' 	=> $body,
-		'title'	=> 'loooool',
+		'title'	=> 'Take your medicine',
              	'icon'	=> 'myicon',/*Default Icon*/
               	'sound' => 'mySound'/*Default sound*/
           );
 	$fields = array
 			(
 				'to'		=> $registrationIds,
-				'notification'	=> $msg
+				'notification'	=> $msg,
+				'priority' => 'high'
 			);
 	
 	
@@ -45,3 +73,4 @@ $body .= 'ur too st00pid';
 		curl_close( $ch );
 #Echo Result Of FireBase Server
 echo $result;
+}}

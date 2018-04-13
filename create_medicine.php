@@ -82,7 +82,7 @@ if (isset($obj->{'uid'}) && isset($obj->{'name'}) && isset($obj->{'medFreqPerTim
 
 			// VERY TEMPORARY to put checktimes all on a single medicine. 
 			// Medicines will actually be an update to a medicine with how the sys will work.
-			$value += "0";
+			$value .= "0";
 			$timeRes = mysqli_query($con, "INSERT INTO CHECKTIMES(checkTime, tag_id) VALUES('$value', '$tag_id')");
 
 
