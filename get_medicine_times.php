@@ -8,7 +8,7 @@ require_once __DIR__ . '/db_connect.php';
 
 $db = new DB_CONNECT();
 
-if (isset($_GET["mid"])) {
+if (isset($_GET['mid'])) {
 	$mid = $_GET['mid'];
 
 	$con = $db->showconn();
@@ -19,18 +19,25 @@ if (isset($_GET["mid"])) {
 
 			if(mysqli_num_rows($result) > 0) {
 
-				$result = mysqli_fetch_array($result);
+				//$result = mysqli_fetch_array($result);
+				$response["times"] = array();
 
-				$med = array();
-				$med["timeid"] = $result["time_id"];
-				$med["thetime"] = $result["checkTime"];
-				$med["thedate"] = $result["checkDate"];
+				
+				while($row = mysqli_fetch_array($result)) {
+				$time = array();
+				$time["timeid"] = $row["time_id"];
+				$time["thetime"] = $row["checkTime"];
+				$time["thedate"] = $row["checkDate"];
+				$time["tagid"] = $row["tag_id"];
+
+				
+				array_push($response["times"], $time);
+				}
 
 
 				$response["success"] = 1;
 
-				$response["medicine"] = array();
-				array_push($response["times"], $med);
+
 
 				echo json_encode($response);
 		} else {

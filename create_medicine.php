@@ -78,12 +78,11 @@ if (isset($obj->{'uid'}) && isset($obj->{'name'}) && isset($obj->{'medFreqPerTim
 		$result = mysqli_query($con, "UPDATE MEDICINES SET med_name = '$name', med_desc = '$med_desc', medFreqPerTime = '$medFreqPerTime', medFreqInterval = '$medFreqInterval', dosage = '$dosage', unit = '$unit', expiration = '$expiration', dosesLeft = '$dosesLeft', taken = 0, reminded = 0, newmed = 0, stolen = 0, inOrOut = 1, user_id = '$user_id'  WHERE tag_id = '$tag_id'");
 
 		//TODO: Drill into timecheck array and add to timecheck table.
-		foreach ($obj->{'checkTime'} as $value) {
+		
+		foreach (array_combine($obj->{'checkTime'}, $obj->{'checkDates'}) as $time => $date) {
 
-			// VERY TEMPORARY to put checktimes all on a single medicine. 
-			// Medicines will actually be an update to a medicine with how the sys will work.
-			$value .= "0";
-			$timeRes = mysqli_query($con, "INSERT INTO CHECKTIMES(checkTime, tag_id) VALUES('$value', '$tag_id')");
+			
+			$timeRes = mysqli_query($con, "INSERT INTO CHECKTIMES(checkTime, checkDate, tag_id) VALUES('$time', '$date', '$tag_id')");
 
 
 		}

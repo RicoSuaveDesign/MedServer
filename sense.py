@@ -9,7 +9,11 @@ while True:
 	type, val = ser.readline().split(" ")
 	print(type)
 	print(val)
-	if type == "Tag":
+	if type == "Light":
+             if(val < 1000):
+                  print("run finger time yes")
+                  
+	elif type == "Tag":
 	     print("Looking up medicine...")
 	     con = mariadb.connect(user='user',password='yes',database='MED_REMINDER')
 	     cursor = con.cursor()
