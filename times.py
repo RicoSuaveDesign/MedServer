@@ -13,7 +13,6 @@ import os
 #Instead, query db every minute for a check time that matches now.
 # Then match with medicine, and match with user to get the token
 
-times = []
 now = time.localtime()
 
 while True:
