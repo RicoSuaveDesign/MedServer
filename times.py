@@ -3,14 +3,7 @@ import time
 import subprocess
 import os
 
-# step 1: define times array and the now
-# step 2: every hour on the hour grab all the reminder times for the hour
-# step 3: every minute on the minute, check times array for a matchy time -- what do when new med added? maybe every 15 minutes. 5 for the sake of the demo? hmm
-# step 3.5: if no times this hour, sleep for an hour
-# step 4: if time == a check time, check db for medicine and if its taken. if yes, just add interval to the check time. if no, remind! and add interval to check time.
-
-#However, for the sake of a demo, we can't implement it in the real way
-#Instead, query db every minute for a check time that matches now.
+#query db every minute for a check time that matches now.
 # Then match with medicine, and match with user to get the token
 
 now = time.localtime()
@@ -23,6 +16,7 @@ while True:
             
             
             strnow = ""
+            strdate = ""
             if(now[3] < 10):
                 strnow = "0"
                 strnow += str(now[3])
@@ -35,12 +29,22 @@ while True:
             else:
                 strnow += str(now[4])
             strnow += ":00"
+            
+            strdate += str(now[0])
+            strdate += "-"
+            if(now[1] < 10):
+                strdate += "0"
+            strdate += str(now[1])
+            strdate += "-"
+            if(now[2] < 10):
+                strdate += "0"
+            strdate += str(now[2])
             #print(strnow)
             
 	    con = mariadb.connect(user='user',password='yes',database='MED_REMINDER')
 	    cursor = con.cursor()
 	    try:
-	    	cursor.execute("SELECT checkTime, tag_id FROM CHECKTIMES WHERE checkTime = %s", (strnow,))
+	    	cursor.execute("SELECT checkTime, tag_id, time_id FROM CHECKTIMES WHERE checkTime = %s AND checkDate = %s", (strnow, strdate,))
 	    except mariadb.Error as error:
 	    	print("Error: {}".format(error))
 	    data = cursor.fetchall()
@@ -48,7 +52,7 @@ while True:
                 for row in data:
                     medcurs = con.cursor()
                     try:
-                        medcurs.execute("SELECT user_id, taken, reminded, med_name FROM MEDICINES WHERE tag_id = %s", (row[1],))
+                        medcurs.execute("SELECT user_id, taken, reminded, med_name, medFreqInterval FROM MEDICINES WHERE tag_id = %s", (row[1],))
                         med_dat = medcurs.fetchone()
                         if(med_dat):
                             print(med_dat[0])
@@ -68,6 +72,27 @@ while True:
                                     con.commit()
                                 except mariadb.Error as error:
                                     print("Error: {}".format(error))
+                            interval = med_dat[4]/1000
+                            nexttim = interval + time.time()
+                            stnexttim = time.localtime(nexttim)
+                            nextrem = ""
+                            nextrem += str(stnexttim[0])
+                            nextrem += "-"
+                            if(stnexttim[1] < 10):
+                                nextrem += "0"
+                            nextrem += str(stnexttim[1])
+                            nextrem += "-"
+                            if(stnexttim[2] < 10):
+                                nextrem += "0"
+                            nextrem += str(stnexttim[2])
+                            #print(nextrem)
+                            
+                            
+                            try:
+                                medcurs.execute("UPDATE CHECKTIMES SET checkDate = %s WHERE time_id = %s", (nextrem, row[2],))
+                                con.commit()
+                            except mariadb.Error as error:
+                                print("Error: {}".format(error))
                         else:
                             print("A medicine was deleted without deleting the time.")
                     except mariadb.Error as error:

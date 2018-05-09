@@ -49,7 +49,7 @@ try:
             con.close()
         else:
             retVal = -1
-            #print("Finger found, but not in database")
+            print("Finger found, but not in database")
             con.close()
     else:
         print("Finger not found")
