@@ -13,11 +13,28 @@ import os
 
 #output = mp.Queue()
 def fingers():
-    s2_out = subprocess.check_output([sys.executable, "fingersearch.py", "34"])
+    s2_out = subprocess.check_output([sys.executable, "/var/www/html/med_reminder/fingersearch.py", "34"])
     user = s2_out
     print(user)
     #output.put(user)
     return user
+
+def buildDBTimeNow():
+    origtime = time.localtime()
+    DBTime = ""
+    if(origtime[3] < 10):
+        DBTime += "0"
+    DBTime += str(origtime[3])
+    DBTime += ":"
+    if(origtime[4] < 10):
+        DBTime += "0"
+    DBTime += str(origtime[4])
+    DBTime += ":"
+    if(origtime[5] < 10):
+        DBTime += "0"
+    DBTime += str(origtime[5])
+    
+    return DBTime
 
 
 ser = serial.Serial('/dev/ttyACM0', 9600, 8, 'N', 1, timeout=5)
@@ -49,6 +66,10 @@ if __name__ == '__main__':
                             curr_user = fingers()
                             print("Curr_user is:")
                             print(curr_user)
+                            #if anyone picks this up, or I'm able to sink some cash into hardware, this login notification is very broken.
+                            # TODO: When multiple users are implemented, have this pass the user id and get client key accordingly.
+                            loginnote = "You are logged into the cabinet." 
+                            os.system("php /var/www/html/med_reminder/othernotifications.php %s"%(loginnote))
                             timeout = time.time() + 300.0 #assume the user will take the meds out in the next 5 minutes
                      else:
                         curr_user = -2 #cabinet closed, now user is done
@@ -57,7 +78,7 @@ if __name__ == '__main__':
                      con = mariadb.connect(user='user',password='yes',database='MED_REMINDER')
                      cursor = con.cursor()
                      try:
-                          cursor.execute("SELECT tag_id, reminded, user_id, dosesLeft, med_name FROM MEDICINES WHERE tag_id=%s", (val,))
+                          cursor.execute("SELECT tag_id, reminded, user_id, dosesLeft, med_name, inOrOut FROM MEDICINES WHERE tag_id=%s", (val,))
                      except mariadb.Error as error:
                           print("Error: {}".format(error))
                      data = cursor.fetchone()
@@ -81,8 +102,9 @@ if __name__ == '__main__':
                                deincrem = data[3] - 1
                                if(deincrem == -1):
                                     deincrem = 0
+                               thetime = buildDBTimeNow() 
                                try:
-                                    cursor.execute("UPDATE MEDICINES SET reminded = 0, dosesLeft = %s WHERE tag_id = %s", (deincrem, val,))
+                                    cursor.execute("UPDATE MEDICINES SET reminded = 0, dosesLeft = %s, lastout = %s WHERE tag_id = %s", (deincrem, thetime, val,))
                                except mariadb.Error as error:
                                     print("Error: {}".format(error))
                                con.commit()
@@ -96,8 +118,9 @@ if __name__ == '__main__':
                                deincrem = data[3] - 1
                                if(deincrem == -1):
                                     deincrem = 0
+                               thetime = buildDBTimeNow() 
                                try:
-                                    cursor.execute("UPDATE MEDICINES SET taken = 1, dosesLeft = %s WHERE tag_id = %s", (deincrem, val,))
+                                    cursor.execute("UPDATE MEDICINES SET taken = 1, dosesLeft = %s, lastout = %s WHERE tag_id = %s", (deincrem, thetime, val,))
                                except mariadb.Error as error:
                                     print("Error: {}".format(error))
                                con.commit()
